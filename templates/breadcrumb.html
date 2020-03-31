@@ -1,0 +1,8 @@
+<li><a href="/index/">首页</a></li>
+{% for i in breadcrumb %}
+{% if forloop.last %}
+<li class="active">{{ i.name }}</li>
+{% else %}
+<li><a href="{{ i.url }}">{{ i.name }}</a></li>
+{% endif %}
+{% endfor %}

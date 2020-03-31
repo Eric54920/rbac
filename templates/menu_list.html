@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="col-sm-3" style="margin-top: 20px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-book"></i> 菜单管理
+            <a href="{% url 'rbac:menu_add' %}" class="btn btn-sm btn-info pull-right" style="padding: 2px 7px;margin-top: -3px;">
+                <i class="fa fa-plus-circle"></i> 添加</a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>图标</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for menu in all_menu %}
+                <tr class="tr">
+                    <td><a href="?mid={{ menu.pk }}">{{ menu.name }}</a></td>
+                    <td><i class="{{ menu.icon }}"></i></td>
+                    <td>
+                        <a href="{% url 'rbac:menu_edit' menu.pk %}"><i class="fa fa-edit"></i></a>
+                        <a href="{% url 'rbac:delete' 'Menu' menu.pk %}"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="col-sm-9" style="margin-top: 20px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-cubes"></i> 权限管理
+            <button class="btn btn-sm btn-primary pull-right" style="padding: 2px 7px;margin-top: -3px;">
+                <i class="fa fa-database"></i> 批量操作</button>
+            <a class="btn btn-sm btn-info pull-right" href="{%url 'rbac:permission_add' %}" style="padding: 2px 7px;margin-top: -3px;">
+                <i class="fa fa-plus-circle"></i> 添加</a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>URL</th>
+                    <th>URL别名</th>
+                    <th>菜单</th>
+                    <th>所属菜单</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for per in per_lst %}
+                <tr class="active" id="{{ per.pk }}">
+                    <td><i class="fa fa-caret-down"></i>    {{ per.name }}</td>
+                    <td>{{ per.url }}</td>
+                    <td>{{ per.title }}</td>
+                    <td>{% if per.menu %}<i class="fa fa-check-circle-o"></i>{% endif %}</td>
+                    <td>{{ per.menu_name }}</td>
+                    <td>
+                        <a href="{% url 'rbac:permission_edit' per.pk %}"><i class="fa fa-edit"></i></a>
+                        <a href="{% url 'rbac:delete' 'permission' per.pk %}"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                    {% for sub in per.sub_menu %}
+                    <tr class="tr" pid="{{ sub.parent }}">
+                        <td>{{ sub.name }}</td>
+                        <td>{{ sub.url }}</td>
+                        <td>{{ sub.title }}</td>
+                        <td>{% if sub.menu %}是{% endif %}</td>
+                        <td>{{ sub.menu_name|default:'' }}</td>
+                        <td>
+                            <a href="{% url 'rbac:permission_edit' sub.pk %}"><i class="fa fa-edit"></i></a>
+                            <a href="{% url 'rbac:delete' 'permission' sub.pk %}"><i class="fa fa-trash-o"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+
+    $(function() {
+        $('.active').click(function() {
+            id = $(this).attr('id')
+            $("[pid="+ id +"]").toggle();
+            var i = $(this).find('i').eq(0)
+            if (i.hasClass('fa-caret-down')) {
+                i.removeClass('fa-caret-down').addClass('fa-caret-right')
+            } else {
+                i.removeClass('fa-caret-right').addClass('fa-caret-down')
+            }
+        })
+    })
+</script>
+{% endblock %}

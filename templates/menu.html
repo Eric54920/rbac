@@ -1,0 +1,12 @@
+<div class="multi-menu">
+    {% for i in orderdict %}
+    <div class="item">
+        <div class="title"><i class="{{ i.icon }}"></i> {{ i.title }}</div>
+        <div class="body {{ i.class }}">
+            {% for child in i.children %}
+            <a href="{{ child.url }}" class="{{ child.class }}">{{ child.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
