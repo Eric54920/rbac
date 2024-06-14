@@ -1,8 +1,8 @@
-权限组件的使用：
+## 权限组件的使用
 
 1. 先把rbac 的app拷贝到新项目中，并且注册
 
-   ```
+   ```python
    INSTALLED_APPS = [
    	...
        'rbac.apps.RbacConfig'
@@ -73,7 +73,7 @@
 
 6. 注册中间件 + 在settings中配置
 
-   ```
+   ```python
    # 白名单
    WHITE_LIST = [
        r'^/login/$',
@@ -95,7 +95,7 @@
 
 7. 登录成功后进行权限信息的初始化
 
-   ```
+   ```python
    from rbac.service.permission_init import permission_init
    
    permission_init(request, user_obj)
